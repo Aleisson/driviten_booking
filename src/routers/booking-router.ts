@@ -1,8 +1,8 @@
 import { Router } from "express";
-
+import * as controllers from "@/controllers/booking-controller";
 const bookingRouter = Router();
 
-bookingRouter.get("/", (req, res) => { res.sendStatus(501); });
+bookingRouter.get("/", controllers.getBooking);
 
 export { bookingRouter };
 
