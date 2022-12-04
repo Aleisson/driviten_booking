@@ -25,12 +25,12 @@ export async function postCreateOrUpdateBooking(req: AuthenticatedRequest, res: 
   const { userId } = req;
 
   if(roomId <= 0 || roomId > 2147483647) {
-    return res.sendStatus(httpStatus.NOT_FOUND);
+    return res.sendStatus(httpStatus.FORBIDDEN);
   }
 
   try {
-    const booking = await bookingServices.createOrUpdateBooking(userId, roomId);
-    return res.status(httpStatus.OK).send({ boookingId: booking.id });
+    const booking = await bookingServices.createOrUpdateBooking(0, userId, roomId);
+    return res.status(httpStatus.OK).send(booking);
   } catch (error) {
     if (error.name === "NotFoundError") {
       return res.sendStatus(httpStatus.NOT_FOUND);
@@ -38,7 +38,7 @@ export async function postCreateOrUpdateBooking(req: AuthenticatedRequest, res: 
     if (error.name === "CannotListHotelsError") {
       return res.sendStatus(httpStatus.PAYMENT_REQUIRED);
     }
-    if(error.name ===  "UnauthorizedError") {
+    if(error.name ===  "CannotPermitBooking") {
       return res.sendStatus(httpStatus.FORBIDDEN);
     }
     return res.sendStatus(httpStatus.BAD_REQUEST);

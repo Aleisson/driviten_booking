@@ -53,9 +53,9 @@ describe("PUT /booking", () => {
     await factory.createPayment(ticket.id, ticketType.price);
     const hotel = await factory.createHotel();
     const roomA = await factory.createRoomWithHotelId(hotel.id);
-    const roomB = await factory.createRoomWithHotelId(hotel.id);
-    await factory.createBooking(user.id, roomA.id);
-    const body =  { roomId: roomB.id };
+    // const roomB = await factory.createRoomWithHotelId(hotel.id);
+    // await factory.createBooking(user.id, roomA.id);
+    const body =  { roomId: roomA.id };
     const response = await server.put("/booking").set("Authorization", `Bearer ${token}`).send(body);
     console.log(response.status);
     console.log(response.body);

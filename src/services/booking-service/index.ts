@@ -12,9 +12,9 @@ async function getBooking( userId: number) {
   return booking;
 }
 
-async function createOrUpdateBooking(userId: number, roomId: number) {
+async function createOrUpdateBooking( bookingId: number, userId: number, roomId: number) {
   await hotelService.getHotels(userId);
-
+  
   const room = await bookingRepository.findRoomById(roomId);
 
   if(!room) {
@@ -24,9 +24,13 @@ async function createOrUpdateBooking(userId: number, roomId: number) {
     throw  cannotBookingError();
   }
   const bookingValid = await bookingRepository.findBookingByUser(userId);
-  const booking = await bookingRepository.upsert( bookingValid.id, userId, roomId);
+ 
+  if(bookingValid && !bookingId) {
+    throw cannotBookingError();
+  }
+  const booking = await bookingRepository.upsert( bookingId, userId, roomId);
   if(!booking) {
-    throw notFoundError();
+    throw cannotBookingError();
   }
   return booking;
 }
