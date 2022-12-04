@@ -19,3 +19,28 @@ export async function getBooking(req: AuthenticatedRequest, res: Response) {
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
+
+export async function postCreateOrUpdateBooking(req: AuthenticatedRequest, res: Response) {
+  const { roomId } = req.body;
+  const { userId } = req;
+
+  if(roomId <= 0 || roomId > 2147483647) {
+    return res.sendStatus(httpStatus.NOT_FOUND);
+  }
+
+  try {
+    const booking = await bookingServices.createOrUpdateBooking(userId, roomId);
+    return res.status(httpStatus.OK).send({ boookingId: booking.id });
+  } catch (error) {
+    if (error.name === "NotFoundError") {
+      return res.sendStatus(httpStatus.NOT_FOUND);
+    }
+    if (error.name === "CannotListHotelsError") {
+      return res.sendStatus(httpStatus.PAYMENT_REQUIRED);
+    }
+    if(error.name ===  "UnauthorizedError") {
+      return res.sendStatus(httpStatus.FORBIDDEN);
+    }
+    return res.sendStatus(httpStatus.BAD_REQUEST);
+  }
+}
