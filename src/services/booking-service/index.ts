@@ -25,7 +25,7 @@ async function createOrUpdateBooking( bookingId: number, userId: number, roomId:
   }
   const bookingValid = await bookingRepository.findBookingByUser(userId);
  
-  if(bookingValid && !bookingId) {
+  if(bookingValid && bookingId) {
     throw cannotBookingError();
   }
   const booking = await bookingRepository.upsert( bookingId, userId, roomId);
