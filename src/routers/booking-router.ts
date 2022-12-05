@@ -7,7 +7,7 @@ bookingRouter
   .all("/*", authenticateToken)  
   .get("/", controllers.getBooking)
   .post("/", controllers.postBooking)
-  .put("/", controllers.putBoooking);
+  .put("/:bookingId", controllers.putBoooking);
 
 export { bookingRouter };
 

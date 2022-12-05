@@ -16,7 +16,7 @@ async function createOrUpdateBooking( bookingId: number, userId: number, roomId:
   await hotelService.getHotels(userId);
   
   const room = await bookingRepository.findRoomById(roomId);
-
+  
   if(!room) {
     throw notFoundError();
   }
@@ -25,9 +25,15 @@ async function createOrUpdateBooking( bookingId: number, userId: number, roomId:
   }
   const bookingValid = await bookingRepository.findBookingByUser(userId);
  
-  if(bookingValid && bookingId) {
+  if(bookingValid && !bookingId) {
     throw cannotBookingError();
   }
+  const bookingValidById = await bookingRepository.findBookingById(bookingId);
+ 
+  if(!bookingValidById && bookingId) {
+    throw cannotBookingError();
+  }
+  
   const booking = await bookingRepository.upsert( bookingId, userId, roomId);
   if(!booking) {
     throw cannotBookingError();
