@@ -340,7 +340,7 @@ describe("PUT/booking/:bookingId", () => {
       const response = await server.put(`/booking/${booking.id}`).set("Authorization", `Bearer ${token}`).send(body);
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
- 
+
     it("should respond with status 403 if valid rommId - valor limit min - 1 and if valid bookingId - nominal ", async () => {
       const user = await factory.createUser();
       const token = await generateValidToken(user);
